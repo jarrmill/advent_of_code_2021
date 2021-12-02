@@ -1,4 +1,4 @@
-const helper_elf = require('../helper_elf');
+const helper_elf = require('./helper_elf');
 
 const check_depths = function (fileName, delimiter = '\n') {
   helper_elf.readFile(fileName)
