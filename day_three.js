@@ -11,9 +11,7 @@ const getPowerConsumption = function(data) {
     epsilon += (mostCommon) ? '0' : '1';
   }
 
-  let gammaInt = parseInt(gamma, 2);
-  let epInt = parseInt(epsilon, 2);
-  console.log('Power Consumption', gammaInt * epInt);
+  console.log('Power Consumption: ', parseInt(gamma, 2) * parseInt(epsilon, 2));
 };
 
 const getMostCommon = function(arrList, idx) {
@@ -40,8 +38,8 @@ const getMostCommon = function(arrList, idx) {
 const getLifeSupport = function(data) {
   const lines = data.split('\n');
   let oxygen = lines.slice();
-  let oxygenCounter = 0;
   let co2 = lines.slice();
+  let oxygenCounter = 0;
   let co2Counter = 0; 
 
   while (oxygen.length > 1) {
@@ -53,11 +51,8 @@ const getLifeSupport = function(data) {
     co2 = filterLines(co2, co2Counter, false);
     co2Counter += 1;
   }
-  
-  const oxInt = parseInt(oxygen[0], 2);
-  const co2Int = parseInt(co2[0], 2);
 
-  console.log('Life Support Rating: ', oxInt * co2Int);
+  console.log('Life Support Rating: ', parseInt(oxygen[0], 2) * parseInt(co2[0], 2));
 }
 
 const filterLines = function(arrList, idx, retainMostCommon = true) {
@@ -69,6 +64,8 @@ const filterLines = function(arrList, idx, retainMostCommon = true) {
   });
 }
 
+
+// Read Files & Execute
 helper_elf.readFile('d3_inputs.csv')
   .then(getPowerConsumption)
   .catch((error) => {
