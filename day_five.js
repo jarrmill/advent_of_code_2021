@@ -5,19 +5,17 @@ const chartThermalLines = function(data) {
   const coords = parseLines(data);
   const [maxX, maxY] = getRange(coords);
   let map = getEmptyMap(maxX, maxY);
-  map = markMaps(map, coords);
-  
+  map = markMap(map, coords);
   const overlaps = countOverlaps(map);
-  //console.log('First map: \n', map.join('\n'))
+
   console.log('Amount of thermal overlaps pt1: ', overlaps);
 
   // PART TWO
   let diagMap = getEmptyMap(maxX, maxY);
-  diagMap = markMaps(diagMap, coords, true);
+  diagMap = markMap(diagMap, coords, true);
   const diagOverlaps = countOverlaps(diagMap);
-  //console.log('Diag map:\n', diagMap.join('\n'));
+
   console.log('Amount of thermal overlaps pt2: ', diagOverlaps);
-  
 }
 
 const parseLines = function(data) {
@@ -35,7 +33,7 @@ const parseLines = function(data) {
     }
   });
 }
-
+// return the highest number from both coords x & y to generate map
 const getRange = function(coords) {
   let x = 0;
   let y = 0;
@@ -56,41 +54,37 @@ const getEmptyMap = function(cols, rows) {
     const col = new Array(parseInt(cols) + 1).fill('.');
     results.push(col); 
   }
-
   return results;
 }
 
-const markMaps = function(m, coords, includeDiags = false) {
+const markMap = function(m, coords, includeDiags = false) {
   const map = m.slice();
   coords.forEach(coord => {
-     const isDiag = (coord.from.x !== coord.to.x && coord.from.y !== coord.to.y);
+    const isDiag = (coord.from.x !== coord.to.x && coord.from.y !== coord.to.y);
     if (!includeDiags && isDiag) return;
 
     const xDirection = (coord.to.x >= coord.from.x) ? 1 : -1;
     const yDirection = (coord.to.y >= coord.from.y) ? 1 : -1;
+    const mark = function(col, row) {
+      if (map[row][col] === '.') {
+        map[row][col] = 1;
+      } else {
+        map[row][col] = parseInt(map[row][col]) + 1;
+      }
+    }
     let x = coord.from.x;
     let y = coord.from.y;
-    while (x !== coord.to.x || y !== coord.to.y){
-      if (map[y][x] === '.') {
-        map[y][x] = 1;
-      } else {
-        map[y][x] = parseInt(map[y][x]) + 1;
-      }
 
+    while (x !== coord.to.x || y !== coord.to.y){
+      mark(x, y);
       if (coord.from.x !== coord.to.x) {
         x += xDirection;
       }
       if (coord.from.y !== coord.to.y) {
         y += yDirection;
       }
-
     };
-
-    if (map[y][x] === '.') {
-      map[y][x] = 1;
-    } else {
-      map[y][x] = parseInt(map[y][x]) + 1;
-    }
+    mark(x, y);
   });
   return map;
 }
@@ -105,7 +99,6 @@ const countOverlaps = function(map) {
       count += 1;
     }
   }
-
   return count;
 };
 // Read Files & Execute
@@ -114,8 +107,3 @@ helper_elf.readFile('d5_inputs.csv')
   .catch((error) => {
     throw new Error(error);
   });
-
-// Exports for tests
-module.exports = {
-
-};
